@@ -11,7 +11,8 @@ Run on server
 Tomcat 
 Finish
 
-
+git remote set-url origin <new-url>
+and open git link in chrome to check changes in the commit
 
 # SET UP
 git clone https://github.com/sarasrija/Blood-Bank-Management-system.git
