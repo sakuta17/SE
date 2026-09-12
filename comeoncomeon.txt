@@ -1,0 +1,1510 @@
+SOFTWARE ENGINEERING LAB – COMPLETE GIT COMMAND MASTER FILE
+==============================================================
+
+Purpose:
+This file keeps ALL Git commands collected from Sets 1–8, organized set-wise,
+plus a separate section of BASIC & COMMON commands for efficient exam use.
+
+IMPORTANT:
+- Replace placeholders such as <repository-url>, <file>, <commit-id>, etc.
+- Modern Git syntax uses `git switch` / `git restore`; older papers may accept
+  `git checkout` equivalents.
+- Do not force-push shared/main branches unless specifically required.
+- Set 5, Set 6, and Set 7 contain many repeated command scenarios; they are
+  retained set-wise so no question is skipped.
+
+
+==============================================================
+PART A – BASIC & COMMON COMMANDS FOR ALL SETS
+==============================================================
+
+A1. Repository setup / clone
+----------------------------
+git clone <repository-url>
+cd <project-folder>
+
+git init
+git add .
+git commit -m "Initial commit"
+
+git remote -v
+git remote add origin <repository-url>
+git remote set-url origin <new-url>
+
+A2. Check repository state
+--------------------------
+git status
+git remote -v
+git branch
+git branch -a
+
+A3. Create and switch branches
+------------------------------
+git branch <branch-name>
+git switch -c <branch-name>
+git checkout -b <branch-name>
+
+git switch <branch-name>
+git checkout <branch-name>
+
+git branch
+git branch -a
+
+git branch -d <branch-name>
+git branch -D <branch-name>
+
+A4. Check changes
+-----------------
+git diff
+git diff <file>
+git diff main..feature/<name>
+git diff main..feature/<name> -- <file>
+
+A5. Stage and commit
+--------------------
+git add <file>
+git add file1 file2
+git add .
+
+git commit -m "message"
+git log
+git log --oneline
+git show <commit-id>
+
+A6. Unstage / discard changes
+-----------------------------
+git restore --staged <file>
+git restore --staged .
+
+git restore <file>
+git checkout -- <file>
+
+A7. Fetch / pull remote changes
+-------------------------------
+git fetch origin
+git fetch origin main
+
+git pull origin main
+git pull --rebase origin main
+
+git log HEAD..origin/main --oneline
+
+A8. Rebase
+-----------
+git fetch origin
+git rebase origin/main
+git rebase --continue
+git rebase --abort
+
+A9. Reset / revert
+------------------
+git reset --hard <commit-id>
+git reset --soft HEAD~1
+git reset --mixed HEAD~1
+
+git revert <commit-id>
+
+A10. Stash
+----------
+git stash
+git stash push -m "unfinished changes"
+
+git stash list
+git stash apply
+git stash apply stash@{0}
+git stash pop
+git stash drop stash@{0}
+git stash clear
+
+A11. Compare history / branches
+-------------------------------
+git diff main..feature/<name>
+git diff main..feature/<name> -- <file>
+
+git log main..feature/<name> --oneline
+git log feature/<name>..main --oneline
+
+git log --oneline --graph --all
+
+A12. Merge
+----------
+git switch main
+git merge feature/<name>
+git merge --abort
+
+git push origin main
+
+A13. Push
+---------
+git push origin <branch-name>
+git push -u origin <branch-name>
+git push
+
+git fetch origin
+git status
+
+git rev-parse HEAD
+git rev-parse origin/main
+
+git push --force-with-lease origin <branch-name>
+
+A14. Recover lost commits
+-------------------------
+git reflog
+git switch -c recovery <commit-id>
+git reset --hard <commit-id>
+
+A15. Patches
+------------
+git diff > changes.patch
+git apply --check changes.patch
+git apply changes.patch
+git format-patch <commit-range>
+git apply --reject changes.patch
+
+A16. SSH / GitHub
+-----------------
+ssh-keygen -t ed25519 -C "your-email@example.com"
+ssh-keygen -t rsa -b 4096 -C "your-email@example.com"
+
+ssh -T git@github.com
+
+git remote set-url origin git@github.com:username/repository.git
+git remote -v
+git push origin main
+
+A17. Stop tracking a file but keep it locally
+----------------------------------------------
+git rm --cached <file>
+git add .gitignore
+git commit -m "Ignore local configuration file"
+
+A18. Amend the latest commit
+----------------------------
+git add <forgotten-file>
+git commit --amend --no-edit
+
+
+==============================================================
+PART B – SET 1 – HOSPITAL MANAGEMENT SYSTEM (HMS)
+==============================================================
+
+GIT
+---
+1. Initialize repository and first commit:
+   git init
+   git add .
+   git commit -m "Initial commit"
+
+2. Feature workflow:
+   git switch -c <feature-branch>
+   git add .
+   git commit -m "Implement feature"
+
+3. Inspect modifications:
+   git status
+   git diff
+
+4. Stage changes:
+   git add <file>
+   git add .
+
+5. Undo a committed change while preserving history:
+   git revert <commit-id>
+
+6. Unstage a file:
+   git restore --staged <file>
+
+7. Temporarily save unfinished work:
+   git stash
+   git stash list
+   git stash apply
+
+8. Keep clean history while synchronizing:
+   git fetch origin
+   git rebase origin/main
+   git rebase --continue
+   git rebase --abort
+
+9. Recover a missing/lost commit:
+   git reflog
+   git switch -c recovery <commit-id>
+
+10. Configure remote and push:
+    git remote add origin <repository-url>
+    git push -u origin <branch-name>
+
+MAVEN
+-----
+Common HMS Maven commands/issues:
+mvn -version
+mvn validate
+mvn clean
+mvn compile
+mvn package
+mvn clean package
+mvn test
+mvn clean package -DskipTests
+mvn dependency:tree
+mvn dependency:analyze
+mvn help:effective-pom
+mvn clean package -X
+
+Key HMS topics:
+- Clone/import Maven project.
+- If `mvn` is not recognized, configure Maven PATH / JAVA_HOME.
+- Check Java/Maven compatibility.
+- Resolve dependencies and dependency conflicts through pom.xml.
+- Use clean build when stale output causes problems.
+- `BUILD SUCCESS` only means Maven build succeeded; the web app can still
+  fail to load because of server, port, JSP, WAR, or runtime configuration.
+- Missing Maven plugin: verify plugin configuration/repository/network.
+- Skip tests when specifically required:
+  mvn clean package -DskipTests
+- Package/project configuration is controlled through pom.xml.
+- Dependency resolution can depend on remote repositories/network and the
+  local Maven repository.
+
+
+DOCKER
+------
+Dockerfile basics:
+FROM <base-image>
+WORKDIR /app
+COPY <source> <destination>
+EXPOSE 8080
+CMD ["<command>"]
+
+Build HMS image:
+docker build -t hmsapp .
+docker run -p 8080:8080 hmsapp
+
+Tag and push:
+docker tag hmsapp <dockerhub-username>/hmsapp:latest
+docker login
+docker push <dockerhub-username>/hmsapp:latest
+
+Useful troubleshooting:
+docker ps
+docker ps -a
+docker logs <container>
+docker exec -it <container> /bin/sh
+docker stop <container>
+docker start <container>
+
+
+==============================================================
+PART C – SET 2 – E-TICKETING / OTS
+==============================================================
+
+GIT
+---
+Initialize:
+git init
+git add .
+git commit -m "Initial commit"
+
+Feature branch:
+git switch -c <feature-branch>
+
+Inspect:
+git status
+git diff
+
+Discard uncommitted changes:
+git restore <file>
+
+Move branch back to an earlier local commit:
+git reset --hard <commit-id>
+
+Delete unused branch:
+git branch -d <branch-name>
+git branch -D <branch-name>
+
+Merge:
+git switch main
+git merge <feature-branch>
+
+Create patch:
+git diff > changes.patch
+git apply --check changes.patch
+git apply changes.patch
+
+Patch conflict handling:
+git apply --reject changes.patch
+
+Remote:
+git remote add origin <repository-url>
+git push -u origin <branch-name>
+
+MAVEN
+-----
+mvn -version
+mvn validate
+mvn clean
+mvn compile
+mvn test
+mvn package
+mvn clean package
+mvn clean package -DskipTests
+mvn dependency:tree
+
+Key OTS topics:
+- Clone/import Maven project.
+- Resolve dependencies in pom.xml.
+- Check Java compiler/source/target compatibility.
+- Identify compilation root causes.
+- Package type (jar/war) must match the project.
+- Clean build:
+  mvn clean package
+- If BUILD SUCCESS but browser fails, inspect server/port/runtime/JSP/WAR.
+- Downloading dependencies requires repository/network access; Maven also
+  uses the local repository.
+- Run tests with:
+  mvn test
+
+
+DOCKER
+------
+Dockerfile / build:
+docker build -t otsapp .
+
+Run on port 8080:
+docker run -p 8080:8080 otsapp
+
+Troubleshooting:
+docker ps
+docker ps -a
+docker logs <container>
+
+Environment consistency:
+- Use the same Java/runtime assumptions in the image as the application.
+- For WAR deployment, use a Tomcat image and copy the WAR into webapps.
+
+Example WAR → Tomcat:
+FROM tomcat:<version>
+COPY target/<application>.war /usr/local/tomcat/webapps/
+EXPOSE 8080
+
+
+==============================================================
+PART D – SET 3 – ONLINE RECRUITMENT SYSTEM (ORS)
+==============================================================
+
+GIT
+---
+Clone:
+git clone <repository-url>
+cd <project-folder>
+
+Create branch:
+git switch -c <feature-branch>
+
+Remote / status:
+git remote -v
+git status
+git branch -a
+
+Check whether behind:
+git fetch origin
+git log HEAD..origin/main --oneline
+
+Update:
+git pull --rebase origin main
+or:
+git rebase origin/main
+
+Resolve rebase conflicts:
+git status
+# edit conflicting files
+git add <resolved-file>
+git rebase --continue
+
+Abort rebase:
+git rebase --abort
+
+Restore missing changes:
+git reflog
+git switch -c recovery <commit-id>
+
+SSH:
+ssh-keygen -t ed25519 -C "your-email@example.com"
+ssh -T git@github.com
+git remote set-url origin git@github.com:username/repository.git
+git push origin main
+
+Verify remote file/commit:
+git fetch origin
+git show origin/main:<path/to/file>
+git rev-parse HEAD
+git rev-parse origin/main
+
+After rebase:
+git push --force-with-lease origin <feature-branch>
+
+MAVEN
+-----
+mvn -version
+mvn validate
+mvn clean
+mvn compile
+mvn package
+mvn clean package
+mvn dependency:tree
+mvn dependency:analyze
+mvn clean package -X
+
+ORS topics:
+- Clone/import and verify pom.xml.
+- Resolve dependencies/conflicts.
+- Check Java version/compiler settings.
+- Clean/refresh project.
+- Configure server/port.
+- Identify process using port 8080 or change application port.
+- Compiler configuration belongs in pom.xml.
+- Dependency declaration, repository/network/cache can affect builds.
+- JDK/Maven/local repository/project dependency differences can cause issues.
+
+To identify a process using 8080 on Windows:
+netstat -ano | findstr :8080
+
+To stop a process by PID on Windows:
+taskkill /PID <PID> /F
+
+
+DOCKER
+------
+Dockerfile:
+FROM <base-image>
+WORKDIR /app
+COPY <application-file> /app/
+EXPOSE 8080
+CMD ["<startup-command>"]
+
+Build:
+docker build -t orsapp .
+
+Run:
+docker run -p 8080:8080 orsapp
+
+Reduce image size/build efficiency:
+- Use an appropriate slim runtime/base image.
+- Avoid copying unnecessary files.
+- Use .dockerignore.
+- Prefer multi-stage builds where appropriate.
+
+Docker Hub:
+docker tag orsapp <dockerhub-username>/orsapp:latest
+docker login
+docker push <dockerhub-username>/orsapp:latest
+
+
+==============================================================
+PART E – SET 4 – ONLINE SHOPPING APPLICATION
+==============================================================
+
+MAVEN
+-----
+Clone/import Maven project:
+git clone <repository-url>
+cd <project-folder>
+
+Identify pom.xml purpose:
+- groupId
+- artifactId
+- version
+- packaging
+- dependencies
+- plugins
+
+Build:
+mvn clean package
+
+Other:
+mvn validate
+mvn clean
+mvn compile
+mvn package
+mvn test
+mvn dependency:tree
+mvn dependency:analyze
+
+Dependency conflicts:
+mvn dependency:tree
+Then resolve conflicting dependency versions/scopes in pom.xml.
+
+Local Maven repository:
+.m2/repository
+
+Debug:
+mvn clean package -X
+
+Verify output:
+- Check target/
+- For WAR projects check target/<application>.war.
+- Deploy/run through the configured local server.
+- Verify JSP pages and server logs.
+
+Troubleshooting distinction:
+1. Build problem → Maven/pom/dependency/compiler.
+2. Server problem → Tomcat/server/port/context.
+3. JSP/runtime problem → JSP code/dependencies/runtime configuration.
+
+
+GIT
+---
+Clone/status/remote:
+git clone <repository-url>
+cd <project-folder>
+git status
+git remote -v
+
+Feature/product update:
+git switch -c feature/product-update
+
+Modify products.jsp and inspect:
+git diff -- src/main/webapp/products.jsp
+
+Stage/commit:
+git add src/main/webapp/products.jsp
+git commit -m "Update product details"
+git log --oneline
+
+Retrieve remote changes:
+git fetch origin
+git pull --rebase origin main
+
+Compare:
+git diff main..feature/product-update
+git diff main..feature/product-update -- src/main/webapp/products.jsp
+
+Merge:
+git switch main
+git merge feature/product-update
+
+Push/synchronize:
+git push origin main
+git fetch origin
+git status
+
+
+DOCKER
+------
+Dockerfile for Java/Maven/Tomcat web application:
+FROM <java-or-tomcat-base-image>
+
+For WAR → Tomcat:
+FROM tomcat:<version>
+COPY target/<application>.war /usr/local/tomcat/webapps/
+EXPOSE 8080
+CMD ["catalina.sh", "run"]
+
+Build OnlineShopping image:
+docker build -t onlineshoppingapp .
+
+Run:
+docker run -p 8080:8080 onlineshoppingapp
+
+Docker Hub:
+docker tag onlineshoppingapp <dockerhub-username>/onlineshoppingapp:latest
+docker login
+docker push <dockerhub-username>/onlineshoppingapp:latest
+
+Verify:
+docker images
+docker ps
+docker ps -a
+
+
+==============================================================
+PART F – SET 5 – BLOOD BANK MANAGEMENT SYSTEM
+==============================================================
+
+GIT – 20 SCENARIOS
+------------------
+
+1. Setup local copy
+git clone <repository-url>
+cd <project-folder>
+
+2. Verify remotes
+git remote -v
+
+3. Check staged/unstaged/untracked
+git status
+
+4. Create + switch to donor-registration feature
+git switch -c feature/donor-registration
+
+5. Show local + remote branches/current branch
+git branch
+git branch -a
+
+6. Stage/commit specific DonorServlet
+git add <path-to-DonorServlet>
+git commit -m "Add donor registration"
+
+7. Add web.xml to last snapshot without changing message
+git add <path-to-web.xml>
+git commit --amend --no-edit
+
+8. Fetch remote POM updates without changing working files
+git fetch origin
+
+9. Incorporate remote main
+git pull origin main
+OR, when clean history is required:
+git pull --rebase origin main
+
+10. Rebase feature onto updated main
+git fetch origin
+git rebase origin/main
+
+11. Abort rebase
+git rebase --abort
+
+12. Revert faulty test commit while preserving history
+git revert <commit-id>
+
+13. Undo last commit while keeping changes staged
+git reset --soft HEAD~1
+
+14. Remove tracked db-config.env but keep local file
+git rm --cached db-config.env
+git add .gitignore
+git commit -m "Ignore local database configuration"
+
+15. Stash unfinished inventory.jsp work
+git stash push -m "unfinished inventory.jsp changes"
+
+16. List and restore stash
+git stash list
+git stash apply stash@{0}
+# or:
+git stash pop stash@{0}
+
+17. Diff specific file between branches
+git diff main..feature/<name> -- <path-to-file>
+
+18. Graph history
+git log --oneline --graph --all
+
+19. Merge feature into main
+git switch main
+git merge feature/<name>
+
+20. Push and verify same commit point
+git push origin main
+git fetch origin
+git rev-parse HEAD
+git rev-parse origin/main
+
+
+MAVEN
+-----
+1. Validate corrected POM schema/dependencies:
+mvn validate
+
+2. Tomcat 7 run plugin block is configured in pom.xml; run:
+mvn org.apache.tomcat.maven:tomcat7-maven-plugin:run
+
+3. MySQL driver dependency:
+- Add MySQL JDBC dependency in pom.xml.
+
+4. Compile test sources:
+mvn test-compile
+
+5. WAR filename:
+mvn package
+# inspect target/<artifactId>-<version>.war
+
+6. Context path:
+- Configure the Tomcat plugin/context path as required in pom.xml.
+
+7. pluginManagement vs plugins:
+- <pluginManagement> defines/defaults plugin configuration.
+- <plugins> actually activates/builds plugins.
+
+8. SNAPSHOT:
+- A version ending in -SNAPSHOT denotes a development version.
+
+9. Check Maven version:
+mvn -version
+
+10. Clean/package/debug:
+mvn clean
+mvn package
+mvn clean package -X
+
+11. Install custom JAR:
+mvn install:install-file ^
+  -Dfile=path/to/sports-or-bloodbank-library.jar ^
+  -DgroupId=<groupId> ^
+  -DartifactId=<artifactId> ^
+  -Dversion=<version> ^
+  -Dpackaging=jar
+
+12. Dependency tree:
+mvn dependency:tree
+
+13. Test output:
+- target/test-classes
+- target/surefire-reports
+
+14. Run a single test:
+mvn -Dtest=<TestClassName> test
+
+15. Skip tests:
+mvn clean package -DskipTests
+
+16. Analyze dependencies:
+mvn dependency:analyze
+
+17. Servlet API provided scope:
+- Use javax.servlet-api dependency with <scope>provided</scope>
+  when the servlet container supplies it.
+
+
+DOCKER
+------
+1. Clone/verify project:
+git clone <repository-url>
+cd <project-folder>
+git status
+
+2. Dockerfile with OpenJDK 17:
+FROM openjdk:17-jdk-slim
+WORKDIR /app
+COPY target/<application>.jar /app/<application>.jar
+EXPOSE 8080
+CMD ["java","-jar","/app/<application>.jar"]
+
+3. Build:
+docker build -t bloodbankapp-image .
+
+4. Run named container:
+docker run -d --name bloodbank-app-container -p 8080:8080 bloodbankapp-image
+
+5. Check containers:
+docker ps
+docker ps -a
+
+6. Open shell:
+docker exec -it bloodbank-app-container /bin/sh
+
+7. Stop/start:
+docker stop bloodbank-app-container
+docker start bloodbank-app-container
+
+8. Create image from container:
+docker commit bloodbank-app-container bloodbankapp-image:committed
+
+9. Login:
+docker login
+
+10. Push:
+docker tag bloodbankapp-image:latest <dockerhub-username>/bloodbankapp:latest
+docker push <dockerhub-username>/bloodbankapp:latest
+
+11. Logout:
+docker logout
+
+12. Remove credentials/container/image as required:
+docker rm <container>
+docker rmi <image>
+
+
+==============================================================
+PART G – SET 6 – SPORTS MANAGEMENT SYSTEM
+==============================================================
+
+GIT – 20 SCENARIOS
+------------------
+The Git scenario sequence is the same 20-command workflow as Set 5, with
+sports-specific files/messages.
+
+1. Setup:
+git clone <repository-url>
+cd <project-folder>
+
+2. Remotes:
+git remote -v
+
+3. Status:
+git status
+
+4. Feature branch:
+git switch -c feature/<sports-feature>
+
+5. Branches:
+git branch
+git branch -a
+
+6. Stage/commit specific sports file:
+git add <sports-file>
+git commit -m "<sports commit message>"
+
+7. Amend last commit without changing message:
+git add <web.xml-or-required-file>
+git commit --amend --no-edit
+
+8. Fetch without modifying working tree:
+git fetch origin
+
+9. Incorporate remote main:
+git pull origin main
+# or clean-history form:
+git pull --rebase origin main
+
+10. Rebase:
+git fetch origin
+git rebase origin/main
+
+11. Abort:
+git rebase --abort
+
+12. Revert faulty commit:
+git revert <commit-id>
+
+13. Undo last commit, keep staged:
+git reset --soft HEAD~1
+
+14. Stop tracking local config, keep locally:
+git rm --cached <db-config.env>
+git add .gitignore
+git commit -m "Ignore local configuration"
+
+15. Stash unfinished sports work:
+git stash push -m "unfinished changes"
+
+16. List/restore:
+git stash list
+git stash apply stash@{0}
+# or:
+git stash pop stash@{0}
+
+17. Compare specific file:
+git diff main..feature/<name> -- <sports-file>
+
+18. Graph:
+git log --oneline --graph --all
+
+19. Merge:
+git switch main
+git merge feature/<name>
+
+20. Push + verify:
+git push origin main
+git fetch origin
+git rev-parse HEAD
+git rev-parse origin/main
+
+
+MAVEN
+-----
+mvn -version
+mvn validate
+mvn clean
+mvn compile
+mvn package
+mvn clean package
+mvn test-compile
+mvn -Dtest=TournamentBracketTest test
+mvn clean package -DskipTests
+mvn dependency:tree
+mvn dependency:analyze
+mvn clean package -X
+
+Custom vendor library (sports analytics):
+mvn install:install-file ^
+  -Dfile=path/to/sports-analytics.jar ^
+  -DgroupId=<groupId> ^
+  -DartifactId=sports-analytics ^
+  -Dversion=<version> ^
+  -Dpackaging=jar
+
+Other Set 6 Maven points:
+- POM schema/dependencies.
+- Tomcat 7 plugin configuration/run.
+- MySQL driver dependency where required.
+- WAR filename in target/.
+- Context path.
+- pluginManagement vs plugins.
+- SNAPSHOT.
+- .m2/repository.
+- target/test-classes and target/surefire-reports.
+- dependency:analyze.
+- javax.servlet-api as provided.
+
+
+DOCKER
+------
+Dockerfile:
+FROM openjdk:17-jdk-slim
+WORKDIR /app
+COPY target/sports-management.jar /app/sports-management.jar
+EXPOSE 8080
+CMD ["java","-jar","/app/sports-management.jar"]
+
+Build:
+docker build -t sportsapp-image .
+
+Run:
+docker run -d --name sports-app-container -p 8080:8080 sportsapp-image
+
+Verify:
+docker ps
+docker ps -a
+
+Shell:
+docker exec -it sports-app-container /bin/sh
+
+Stop/start:
+docker stop sports-app-container
+docker start sports-app-container
+
+Commit container:
+docker commit sports-app-container sportsapp-image:committed
+
+Docker Hub:
+docker login
+docker tag sportsapp-image:latest <dockerhub-username>/sportsapp:latest
+docker push <dockerhub-username>/sportsapp:latest
+docker logout
+
+Cleanup:
+docker rm <container>
+docker rmi <image>
+
+
+==============================================================
+PART H – SET 7 – APARTMENT MANAGEMENT SYSTEM
+==============================================================
+
+GIT – 20 SCENARIOS
+------------------
+Same 20-scenario workflow as Sets 5/6, with apartment-specific names.
+
+1. Clone/setup:
+git clone <repository-url>
+cd <project-folder>
+
+2. Verify remotes:
+git remote -v
+
+3. Status:
+git status
+
+4. Feature branch:
+git switch -c feature/<apartment-feature>
+
+5. Branches:
+git branch
+git branch -a
+
+6. Stage/commit apartment file:
+git add <apartment-file>
+git commit -m "<apartment commit message>"
+
+7. Amend:
+git add <required-file>
+git commit --amend --no-edit
+
+8. Fetch:
+git fetch origin
+
+9. Incorporate main:
+git pull origin main
+# or:
+git pull --rebase origin main
+
+10. Rebase:
+git fetch origin
+git rebase origin/main
+
+11. Abort:
+git rebase --abort
+
+12. Revert:
+git revert <commit-id>
+
+13. Soft reset:
+git reset --soft HEAD~1
+
+14. Keep local config but remove tracking:
+git rm --cached <db-config.env>
+git add .gitignore
+git commit -m "Ignore local configuration"
+
+15. Stash:
+git stash push -m "unfinished changes"
+
+16. Restore stash:
+git stash list
+git stash apply stash@{0}
+# or:
+git stash pop stash@{0}
+
+17. Specific file diff:
+git diff main..feature/<name> -- <apartment-file>
+
+18. Graph:
+git log --oneline --graph --all
+
+19. Merge:
+git switch main
+git merge feature/<name>
+
+20. Push/verify:
+git push origin main
+git fetch origin
+git rev-parse HEAD
+git rev-parse origin/main
+
+
+MAVEN
+-----
+mvn -version
+mvn validate
+mvn clean
+mvn compile
+mvn package
+mvn clean package
+mvn test-compile
+mvn -Dtest=MaintenanceBillingTest test
+mvn clean package -DskipTests
+mvn dependency:tree
+mvn dependency:analyze
+mvn clean package -X
+
+Custom vendor library:
+mvn install:install-file ^
+  -Dfile=path/to/apartment-analytics.jar ^
+  -DgroupId=<groupId> ^
+  -DartifactId=apartment-analytics ^
+  -Dversion=<version> ^
+  -Dpackaging=jar
+
+Other Set 7 Maven points:
+- POM schema/dependencies.
+- Tomcat 7 plugin.
+- MySQL driver.
+- WAR filename.
+- Context path.
+- pluginManagement vs plugins.
+- SNAPSHOT.
+- .m2/repository.
+- target/test-classes.
+- target/surefire-reports.
+- dependency:analyze.
+- javax.servlet-api with provided scope.
+
+
+DOCKER
+------
+Dockerfile:
+FROM openjdk:17-jdk-slim
+WORKDIR /app
+COPY target/apartment-management.jar /app/apartment-management.jar
+EXPOSE 8080
+CMD ["java","-jar","/app/apartment-management.jar"]
+
+Build:
+docker build -t apartmentapp-image .
+
+Run:
+docker run -d --name apartment-app-container -p 8080:8080 apartmentapp-image
+
+Verify:
+docker ps
+docker ps -a
+
+Shell:
+docker exec -it apartment-app-container /bin/sh
+
+Stop/start:
+docker stop apartment-app-container
+docker start apartment-app-container
+
+Commit:
+docker commit apartment-app-container apartmentapp-image:committed
+
+Docker Hub:
+docker login
+docker tag apartmentapp-image:latest <dockerhub-username>/apartmentapp:latest
+docker push <dockerhub-username>/apartmentapp:latest
+docker logout
+
+Cleanup:
+docker rm <container>
+docker rmi <image>
+
+
+==============================================================
+PART I – SET 8 – VEHICLE RENTAL MANAGEMENT SYSTEM
+==============================================================
+
+MAVEN – 40-QUESTION COVERAGE
+----------------------------
+1. Clone/import Maven Web Project:
+git clone <repository-url>
+cd <project-folder>
+
+2. Identify pom.xml:
+- groupId
+- artifactId
+- version
+- packaging
+
+3. Identify dependencies/plugins:
+mvn dependency:tree
+mvn help:effective-pom
+
+4. Clean/build:
+mvn clean
+mvn compile
+mvn package
+mvn clean package
+
+5. Verify output:
+- target/
+- target/<artifactId>-<version>.war for WAR project
+
+6. Local server:
+- Deploy/run WAR using Tomcat/server.
+- Check server logs and context path.
+
+7. Dependency tree:
+mvn dependency:tree
+
+8. Dependency resolution/version conflicts:
+- Inspect dependency:tree.
+- Resolve versions/scopes/exclusions in pom.xml.
+
+9. Local repository:
+.m2/repository
+
+10. Debug:
+mvn clean package -X
+
+11. Build vs server vs JSP:
+- Maven BUILD SUCCESS does not guarantee the JSP web application works.
+- Check WAR deployment, Tomcat/server, port, context path, JSP/runtime
+  dependencies and logs.
+
+Other relevant commands:
+mvn validate
+mvn test
+mvn clean package -DskipTests
+mvn dependency:analyze
+mvn -version
+
+
+GIT – 40-QUESTION COVERAGE
+--------------------------
+Clone:
+git clone <repository-url>
+cd <project-folder>
+
+Status/remotes:
+git status
+git remote -v
+
+Feature branch:
+git switch -c feature/vehicle-update
+
+Modify vehicle.jsp and inspect:
+git diff -- src/main/webapp/vehicle.jsp
+
+Stage/commit/verify:
+git add src/main/webapp/vehicle.jsp
+git commit -m "Update vehicle details"
+git log --oneline
+git show <commit-id>
+
+Retrieve remote changes:
+git fetch origin
+git pull --rebase origin main
+
+Compare feature/main:
+git diff main..feature/vehicle-update
+git diff main..feature/vehicle-update -- src/main/webapp/vehicle.jsp
+
+Merge/push/verify:
+git switch main
+git merge feature/vehicle-update
+git push origin main
+git fetch origin
+git status
+git rev-parse HEAD
+git rev-parse origin/main
+
+
+DOCKER – 20-QUESTION COVERAGE
+----------------------------
+Dockerfile for Java/Tomcat WAR:
+FROM tomcat:<version>
+COPY target/<vehicle-rental>.war /usr/local/tomcat/webapps/
+EXPOSE 8080
+CMD ["catalina.sh", "run"]
+
+Build/tag:
+docker build -t vehiclerentalapp .
+docker tag vehiclerentalapp <dockerhub-username>/vehiclerentalapp:latest
+
+Run:
+docker run -d --name vehiclerental-app-container -p 8080:8080 vehiclerentalapp
+
+Verify:
+docker ps
+docker ps -a
+docker logs vehiclerental-app-container
+
+Docker Hub:
+docker login
+docker push <dockerhub-username>/vehiclerentalapp:latest
+docker logout
+
+Useful inspection:
+docker images
+docker exec -it vehiclerental-app-container /bin/sh
+docker stop vehiclerental-app-container
+docker start vehiclerental-app-container
+
+
+==============================================================
+PART J – HIGH-VALUE EXAM COMMAND DIFFERENCES
+==============================================================
+
+1. FETCH vs PULL
+----------------
+git fetch origin
+= Downloads remote updates/references without integrating them into the
+  current branch or changing working files.
+
+git pull origin main
+= Fetch + integrate remote main, normally by merge.
+
+git pull --rebase origin main
+= Fetch + replay local commits on top of remote main.
+
+2. REVERT vs RESET
+------------------
+git revert <commit-id>
+= Safely undo a committed change by creating a NEW commit.
+= Preserves history.
+Trigger words: "preserve history", "undo faulty commit".
+
+git reset --soft HEAD~1
+= Remove last commit, keep changes staged.
+Trigger: "undo last commit but keep changes staged".
+
+git reset --hard <commit-id>
+= Move branch and working tree to commit; uncommitted changes can be lost.
+Trigger: "move branch back", especially when discard is intended.
+
+3. RESTORE vs RESTORE --STAGED
+------------------------------
+git restore <file>
+= Discard working-tree changes in the file.
+
+git restore --staged <file>
+= Unstage file but keep working-tree changes.
+
+4. RM --CACHED
+--------------
+git rm --cached <file>
+= Stop tracking file in Git but keep the file locally.
+
+5. STASH
+--------
+git stash
+= Save unfinished changes temporarily.
+
+git stash list
+= List stashes.
+
+git stash apply stash@{0}
+= Restore stash and keep it in stash list.
+
+git stash pop stash@{0}
+= Restore stash and remove it from stash list.
+
+6. REBASE
+---------
+git rebase origin/main
+= Replay feature commits on top of updated main.
+
+git rebase --continue
+= Continue after conflict resolution.
+
+git rebase --abort
+= Cancel the rebase and return to previous state.
+
+7. MERGE
+--------
+git switch main
+git merge feature/<name>
+= Bring feature history into main.
+
+8. REFLOG
+---------
+git reflog
+= Find previous HEAD/branch states and recover commits that appear lost.
+
+9. PATCH
+--------
+git diff > changes.patch
+= Create patch from working-tree differences.
+
+git apply --check changes.patch
+= Check whether patch can be applied cleanly.
+
+git apply changes.patch
+= Apply patch.
+
+10. FORCE PUSH AFTER REBASE
+---------------------------
+git push --force-with-lease origin <feature-branch>
+= Safer force push after history rewriting.
+Use cautiously; avoid on shared main.
+
+11. SAME COMMIT POINT
+---------------------
+git fetch origin
+git rev-parse HEAD
+git rev-parse origin/main
+
+If the two hashes are identical, local HEAD and origin/main point to the
+same commit.
+
+
+==============================================================
+PART K – MAVEN MASTER QUICK REFERENCE
+==============================================================
+
+mvn -version
+mvn validate
+mvn clean
+mvn compile
+mvn test
+mvn test-compile
+mvn package
+mvn clean package
+mvn clean package -DskipTests
+mvn clean package -X
+mvn dependency:tree
+mvn dependency:analyze
+mvn help:effective-pom
+mvn -Dtest=<TestClassName> test
+mvn install:install-file -Dfile=<jar> -DgroupId=<groupId> -DartifactId=<artifactId> -Dversion=<version> -Dpackaging=jar
+mvn org.apache.tomcat.maven:tomcat7-maven-plugin:run
+
+
+==============================================================
+PART L – DOCKER MASTER QUICK REFERENCE
+==============================================================
+
+Build:
+docker build -t <image-name> .
+
+Run:
+docker run -p 8080:8080 <image-name>
+
+Run named/background:
+docker run -d --name <container-name> -p 8080:8080 <image-name>
+
+Check:
+docker ps
+docker ps -a
+docker images
+
+Logs:
+docker logs <container-name>
+
+Shell:
+docker exec -it <container-name> /bin/sh
+
+Stop/start:
+docker stop <container-name>
+docker start <container-name>
+
+Commit:
+docker commit <container-name> <image-name>:committed
+
+Tag:
+docker tag <image-name>:latest <username>/<image-name>:latest
+
+Login/push/logout:
+docker login
+docker push <username>/<image-name>:latest
+docker logout
+
+Remove:
+docker rm <container-name>
+docker rmi <image-name>
+
+
+==============================================================
+PART M – ONE-MINUTE EXAM REVISION
+==============================================================
+
+GIT:
+clone → status → branch → switch -c → diff → add → commit
+→ fetch/pull → rebase → resolve → continue/abort → revert/reset
+→ stash → merge → push → verify
+
+MOST COMMON:
+git clone <url>
+git status
+git remote -v
+git switch -c feature/name
+git diff
+git add .
+git commit -m "message"
+git fetch origin
+git pull --rebase origin main
+git rebase origin/main
+git rebase --continue
+git rebase --abort
+git revert <commit>
+git reset --soft HEAD~1
+git reset --hard <commit>
+git stash
+git stash list
+git stash apply
+git merge feature/name
+git push origin main
+git log --oneline --graph --all
+git reflog
+
+MAVEN:
+mvn -version
+mvn clean
+mvn compile
+mvn test
+mvn package
+mvn clean package
+mvn clean package -DskipTests
+mvn dependency:tree
+mvn dependency:analyze
+mvn clean package -X
+
+DOCKER:
+docker build -t app .
+docker run -p 8080:8080 app
+docker ps
+docker ps -a
+docker logs <container>
+docker exec -it <container> /bin/sh
+docker stop <container>
+docker start <container>
+docker login
+docker tag app <username>/app:latest
+docker push <username>/app:latest
+docker logout
+
+
+==============================================================
+END OF COMPLETE COMMAND FILE
+==============================================================
