@@ -1,3 +1,18 @@
+Mvn validate 
+Mvn clean 
+Mvn install 
+Mvn test 
+Mvn build - clean install test package 
+
+Tomcat 
+Start 
+Run as 
+Run on server 
+Tomcat 
+Finish
+
+
+
 # SET UP
 git clone https://github.com/sarasrija/Blood-Bank-Management-system.git
 cd Blood-Bank-Management-system
