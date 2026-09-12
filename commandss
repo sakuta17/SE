@@ -1,0 +1,87 @@
+# SET UP
+git clone https://github.com/sarasrija/Blood-Bank-Management-system.git
+cd Blood-Bank-Management-system
+
+# REMOTE
+git remote -v
+
+# STATUS
+git status
+
+# CREATE + SWITCH BRANCH
+git switch -c feature/donor-registration
+
+# ALL BRANCHES
+git branch -a
+
+# SWITCH BRANCH
+git switch main
+
+# SEE CHANGES
+git diff
+
+# STAGE FILE
+git add src/main/java/com/bloodbank/servlet/DonorServlet.java
+
+# COMMIT
+git commit -m "Add donor registration servlet"
+
+# STAGE EVERYTHING
+git add .
+
+# COMMIT HISTORY
+git log --oneline
+
+# ADD FORGOTTEN FILE TO LAST COMMIT
+git add src/main/webapp/WEB-INF/web.xml
+git commit --amend --no-edit
+
+# GET REMOTE CHANGES WITHOUT MERGING
+git fetch origin
+
+# GET + MERGE REMOTE MAIN INTO CURRENT BRANCH
+git pull origin main
+
+# REBASE FEATURE ON MAIN
+git rebase main
+
+# CANCEL REBASE
+git rebase --abort
+
+# SAFELY UNDO A COMMIT
+git revert <faulty-commit-id>
+
+# REMOVE LAST COMMIT, KEEP CHANGES STAGED
+git reset --soft HEAD~1
+
+# REMOVE FILE FROM GIT, KEEP LOCAL FILE
+git rm --cached src/main/resources/db-config.env
+
+# TEMPORARILY SAVE UNFINISHED WORK
+git stash
+
+# VIEW SAVED WORK
+git stash list
+
+# RESTORE SAVED WORK
+git stash pop
+
+# COMPARE BRANCHES
+git diff main..feature/donor-registration
+
+# COMPARE SPECIFIC FILE
+git diff main..feature/donor-registration -- src/main/webapp/index.jsp
+
+# VISUAL COMMIT HISTORY
+git log --oneline --graph --all
+
+# MERGE FEATURE INTO MAIN
+git switch main
+git merge feature/donor-registration
+
+# PUSH TO GITHUB
+git push origin main
+
+# VERIFY EXACT COMMIT
+git rev-parse HEAD
+git rev-parse origin/main
