@@ -1,0 +1,1075 @@
+SOFTWARE ENGINEERING LAB – COMPLETE DOCKER COMMANDS
+======================================================
+
+This is the SEPARATE Docker-only command file compiled from ALL 8 SETS.
+No Docker topic from the analyzed Sets 1–8 is intentionally skipped.
+
+PLACEHOLDERS:
+<image-name>       Docker image name
+<container-name>   Docker container name
+<username>         Docker Hub username
+<version>          required version
+<application>      application name
+<war-file>         WAR filename
+<jar-file>         JAR filename
+
+
+======================================================
+PART A – BASIC & COMMON DOCKER COMMANDS
+======================================================
+
+1. Check Docker version
+-----------------------
+docker --version
+docker version
+
+2. Docker system information
+----------------------------
+docker info
+
+3. Build an image from Dockerfile
+----------------------------------
+docker build -t <image-name> .
+
+4. Build with a specific Dockerfile
+------------------------------------
+docker build -f <Dockerfile-name> -t <image-name> .
+
+5. List images
+--------------
+docker images
+
+6. Run a container
+-----------------
+docker run <image-name>
+
+7. Run with port mapping
+------------------------
+docker run -p 8080:8080 <image-name>
+
+8. Run in background with a name
+--------------------------------
+docker run -d --name <container-name> -p 8080:8080 <image-name>
+
+9. List running containers
+--------------------------
+docker ps
+
+10. List all containers, including stopped
+------------------------------------------
+docker ps -a
+
+11. View container logs
+----------------------
+docker logs <container-name>
+
+12. Follow live logs
+--------------------
+docker logs -f <container-name>
+
+13. Open a shell inside a running container
+--------------------------------------------
+docker exec -it <container-name> /bin/sh
+
+14. Stop a container
+--------------------
+docker stop <container-name>
+
+15. Start a stopped container
+----------------------------
+docker start <container-name>
+
+16. Restart a container
+----------------------
+docker restart <container-name>
+
+17. Remove a container
+---------------------
+docker rm <container-name>
+
+18. Force-remove a container
+----------------------------
+docker rm -f <container-name>
+
+19. Remove an image
+------------------
+docker rmi <image-name>
+
+20. Tag an image
+----------------
+docker tag <image-name>:latest <username>/<image-name>:latest
+
+21. Login to Docker Hub
+-----------------------
+docker login
+
+22. Push image to Docker Hub
+----------------------------
+docker push <username>/<image-name>:latest
+
+23. Logout
+----------
+docker logout
+
+
+======================================================
+PART B – DOCKERFILE BASIC INSTRUCTIONS
+======================================================
+
+A standard application Dockerfile can contain:
+
+FROM <base-image>
+WORKDIR /app
+COPY <source> <destination>
+EXPOSE 8080
+CMD ["<startup-command>"]
+
+IMPORTANT INSTRUCTIONS:
+
+FROM
+----
+Specifies the base image.
+
+Example:
+FROM openjdk:17-jdk-slim
+
+WORKDIR
+-------
+Sets the working directory inside the image.
+
+Example:
+WORKDIR /app
+
+COPY
+----
+Copies files from build context into the image.
+
+Example:
+COPY target/<application>.jar /app/<application>.jar
+
+EXPOSE
+------
+Documents the port used by the application.
+
+Example:
+EXPOSE 8080
+
+CMD
+---
+Specifies the default command when the container starts.
+
+Example:
+CMD ["java","-jar","/app/<application>.jar"]
+
+
+======================================================
+PART C – SET 1 – HOSPITAL MANAGEMENT SYSTEM
+======================================================
+
+Docker tasks covered in Set 1:
+
+1. Create Dockerfile
+--------------------
+FROM <base-image>
+WORKDIR /app
+COPY <application-file> /app/
+EXPOSE 8080
+CMD ["<startup-command>"]
+
+2. Build HMS image
+------------------
+docker build -t hmsapp .
+
+3. Run HMS application on port 8080
+------------------------------------
+docker run -p 8080:8080 hmsapp
+
+4. Docker consistency
+---------------------
+Use a Docker image to keep the application runtime/environment consistent.
+
+5. Dockerfile instructions
+---------------------------
+FROM
+WORKDIR
+COPY
+EXPOSE
+CMD
+
+6. Docker build troubleshooting
+--------------------------------
+docker build -t hmsapp .
+docker images
+docker ps
+docker ps -a
+docker logs <container-name>
+
+7. Port mapping
+---------------
+docker run -p 8080:8080 hmsapp
+
+Meaning:
+HOST_PORT:CONTAINER_PORT
+
+8. Tag HMS image for Docker Hub
+-------------------------------
+docker tag hmsapp:latest <username>/hmsapp:latest
+
+9. Login
+--------
+docker login
+
+10. Push
+--------
+docker push <username>/hmsapp:latest
+
+
+======================================================
+PART D – SET 2 – E-TICKETING / OTS
+======================================================
+
+Docker tasks covered in Set 2:
+
+1. Create Dockerfile for OTS
+----------------------------
+FROM <base-image>
+WORKDIR /app
+COPY <application-file> /app/
+EXPOSE 8080
+CMD ["<startup-command>"]
+
+2. Build OTS image
+------------------
+docker build -t otsapp .
+
+3. Run on port 8080
+-------------------
+docker run -p 8080:8080 otsapp
+
+4. Build error troubleshooting
+------------------------------
+docker build -t otsapp .
+docker images
+
+5. Port mapping
+---------------
+docker run -p 8080:8080 otsapp
+
+6. Container stops unexpectedly
+-------------------------------
+docker ps
+docker ps -a
+docker logs <container-name>
+
+7. Environment consistency
+--------------------------
+Use a compatible Java/server/runtime image and keep application runtime
+requirements consistent inside the container.
+
+8. WAR → Tomcat Docker deployment
+---------------------------------
+FROM tomcat:<version>
+COPY target/<application>.war /usr/local/tomcat/webapps/
+EXPOSE 8080
+CMD ["catalina.sh", "run"]
+
+9. Build Tomcat image
+---------------------
+docker build -t otsapp .
+
+10. Run Tomcat application
+--------------------------
+docker run -p 8080:8080 otsapp
+
+
+======================================================
+PART E – SET 3 – ONLINE RECRUITMENT SYSTEM (ORS)
+======================================================
+
+Docker tasks covered in Set 3:
+
+1. Create Dockerfile
+--------------------
+FROM <base-image>
+WORKDIR /app
+COPY <application-file> /app/
+EXPOSE 8080
+CMD ["<startup-command>"]
+
+2. Build ORS image
+------------------
+docker build -t orsapp .
+
+3. Port mapping
+---------------
+docker run -p 8080:8080 orsapp
+
+4. Reduce image size / improve build efficiency
+------------------------------------------------
+- Use an appropriate slim base/runtime image.
+- Avoid copying unnecessary files.
+- Use .dockerignore.
+- Prefer multi-stage builds where appropriate.
+
+5. Tag ORS image
+----------------
+docker tag orsapp:latest <username>/orsapp:latest
+
+6. Docker Hub login
+-------------------
+docker login
+
+7. Push ORS image
+-----------------
+docker push <username>/orsapp:latest
+
+8. Verify image
+---------------
+docker images
+
+9. Verify container
+-------------------
+docker ps
+docker ps -a
+
+
+======================================================
+PART F – SET 4 – ONLINE SHOPPING APPLICATION
+======================================================
+
+Docker tasks covered in Set 4:
+
+1. Dockerfile using Java/Maven/Tomcat base
+------------------------------------------
+FROM <java-or-tomcat-base-image>
+
+For WAR deployment:
+FROM tomcat:<version>
+COPY target/<application>.war /usr/local/tomcat/webapps/
+EXPOSE 8080
+CMD ["catalina.sh", "run"]
+
+2. Build OnlineShopping image
+-----------------------------
+docker build -t onlineshoppingapp .
+
+3. Run on port 8080
+-------------------
+docker run -p 8080:8080 onlineshoppingapp
+
+4. Tag for Docker Hub
+---------------------
+docker tag onlineshoppingapp:latest <username>/onlineshoppingapp:latest
+
+5. Login
+--------
+docker login
+
+6. Push
+-------
+docker push <username>/onlineshoppingapp:latest
+
+7. Verify images
+----------------
+docker images
+
+8. Verify containers
+--------------------
+docker ps
+docker ps -a
+
+9. WAR → Tomcat webapps
+-----------------------
+COPY target/<application>.war /usr/local/tomcat/webapps/
+
+10. Start Tomcat
+----------------
+CMD ["catalina.sh", "run"]
+
+
+======================================================
+PART G – SET 5 – BLOOD BANK MANAGEMENT SYSTEM
+======================================================
+
+Docker tasks covered in Set 5:
+
+1. Clone/verify application before Docker build
+------------------------------------------------
+git clone <repository-url>
+cd <project-folder>
+git status
+
+2. Dockerfile with OpenJDK 17
+-----------------------------
+FROM openjdk:17-jdk-slim
+WORKDIR /app
+COPY target/<application>.jar /app/<application>.jar
+EXPOSE 8080
+CMD ["java","-jar","/app/<application>.jar"]
+
+3. Build image
+--------------
+docker build -t bloodbankapp-image .
+
+4. Run named container on port 8080
+-----------------------------------
+docker run -d --name bloodbank-app-container -p 8080:8080 bloodbankapp-image
+
+5. Check running containers
+---------------------------
+docker ps
+
+6. Check all containers
+-----------------------
+docker ps -a
+
+7. Open shell in container
+--------------------------
+docker exec -it bloodbank-app-container /bin/sh
+
+8. Stop container
+-----------------
+docker stop bloodbank-app-container
+
+9. Start container
+-----------------
+docker start bloodbank-app-container
+
+10. Create image from a container
+----------------------------------
+docker commit bloodbank-app-container bloodbankapp-image:committed
+
+11. Login to Docker Hub
+-----------------------
+docker login
+
+12. Tag image
+-------------
+docker tag bloodbankapp-image:latest <username>/bloodbankapp:latest
+
+13. Push image
+--------------
+docker push <username>/bloodbankapp:latest
+
+14. Logout
+----------
+docker logout
+
+15. Remove container
+--------------------
+docker rm <container-name>
+
+16. Remove image
+----------------
+docker rmi <image-name>
+
+
+======================================================
+PART H – SET 6 – SPORTS MANAGEMENT SYSTEM
+======================================================
+
+Docker tasks covered in Set 6:
+
+1. Dockerfile
+-------------
+FROM openjdk:17-jdk-slim
+WORKDIR /app
+COPY target/sports-management.jar /app/sports-management.jar
+EXPOSE 8080
+CMD ["java","-jar","/app/sports-management.jar"]
+
+2. Build
+--------
+docker build -t sportsapp-image .
+
+3. Run named container
+----------------------
+docker run -d --name sports-app-container -p 8080:8080 sportsapp-image
+
+4. Check containers
+-------------------
+docker ps
+docker ps -a
+
+5. Open shell
+-------------
+docker exec -it sports-app-container /bin/sh
+
+6. Stop
+-------
+docker stop sports-app-container
+
+7. Start
+--------
+docker start sports-app-container
+
+8. Commit container to image
+----------------------------
+docker commit sports-app-container sportsapp-image:committed
+
+9. Docker Hub login
+-------------------
+docker login
+
+10. Tag
+-------
+docker tag sportsapp-image:latest <username>/sportsapp:latest
+
+11. Push
+--------
+docker push <username>/sportsapp:latest
+
+12. Logout
+----------
+docker logout
+
+13. Cleanup
+-----------
+docker rm <container>
+docker rmi <image>
+
+
+======================================================
+PART I – SET 7 – APARTMENT MANAGEMENT SYSTEM
+======================================================
+
+Docker tasks covered in Set 7:
+
+1. Dockerfile
+-------------
+FROM openjdk:17-jdk-slim
+WORKDIR /app
+COPY target/apartment-management.jar /app/apartment-management.jar
+EXPOSE 8080
+CMD ["java","-jar","/app/apartment-management.jar"]
+
+2. Build
+--------
+docker build -t apartmentapp-image .
+
+3. Run named container
+----------------------
+docker run -d --name apartment-app-container -p 8080:8080 apartmentapp-image
+
+4. Verify
+---------
+docker ps
+docker ps -a
+
+5. Shell
+--------
+docker exec -it apartment-app-container /bin/sh
+
+6. Stop
+-------
+docker stop apartment-app-container
+
+7. Start
+--------
+docker start apartment-app-container
+
+8. Commit
+---------
+docker commit apartment-app-container apartmentapp-image:committed
+
+9. Docker Hub
+-------------
+docker login
+docker tag apartmentapp-image:latest <username>/apartmentapp:latest
+docker push <username>/apartmentapp:latest
+docker logout
+
+10. Cleanup
+-----------
+docker rm <container>
+docker rmi <image>
+
+
+======================================================
+PART J – SET 8 – VEHICLE RENTAL MANAGEMENT SYSTEM
+======================================================
+
+Docker – 20-question coverage:
+
+1. Create Dockerfile with Java/Tomcat base
+------------------------------------------
+FROM tomcat:<version>
+COPY target/<vehicle-rental>.war /usr/local/tomcat/webapps/
+EXPOSE 8080
+CMD ["catalina.sh", "run"]
+
+2. WAR copied into Tomcat webapps
+---------------------------------
+COPY target/<vehicle-rental>.war /usr/local/tomcat/webapps/
+
+3. Expose application port
+--------------------------
+EXPOSE 8080
+
+4. Start Tomcat
+---------------
+CMD ["catalina.sh", "run"]
+
+5. Build Vehicle Rental image
+-----------------------------
+docker build -t vehiclerentalapp .
+
+6. Tag image
+------------
+docker tag vehiclerentalapp:latest <username>/vehiclerentalapp:latest
+
+7. Run container with host 8080 mapped to container 8080
+---------------------------------------------------------
+docker run -d --name vehiclerental-app-container -p 8080:8080 vehiclerentalapp
+
+8. Verify running container
+---------------------------
+docker ps
+
+9. Verify all containers
+------------------------
+docker ps -a
+
+10. View logs
+-------------
+docker logs vehiclerental-app-container
+
+11. Verify image
+----------------
+docker images
+
+12. Login
+---------
+docker login
+
+13. Push
+--------
+docker push <username>/vehiclerentalapp:latest
+
+14. Logout
+----------
+docker logout
+
+15. Open container shell
+------------------------
+docker exec -it vehiclerental-app-container /bin/sh
+
+16. Stop
+--------
+docker stop vehiclerental-app-container
+
+17. Start
+---------
+docker start vehiclerental-app-container
+
+18. Restart
+-----------
+docker restart vehiclerental-app-container
+
+19. Inspect application/container state
+---------------------------------------
+docker ps
+docker ps -a
+docker logs vehiclerental-app-container
+
+20. Main complete flow
+----------------------
+docker build -t vehiclerentalapp .
+docker run -d --name vehiclerental-app-container -p 8080:8080 vehiclerentalapp
+docker ps
+docker logs vehiclerental-app-container
+docker login
+docker tag vehiclerentalapp:latest <username>/vehiclerentalapp:latest
+docker push <username>/vehiclerentalapp:latest
+docker logout
+
+
+======================================================
+PART K – ALL DOCKERFILE PATTERNS FROM THE SETS
+======================================================
+
+PATTERN 1 – Generic Java application
+-------------------------------------
+FROM openjdk:17-jdk-slim
+WORKDIR /app
+COPY target/<application>.jar /app/<application>.jar
+EXPOSE 8080
+CMD ["java","-jar","/app/<application>.jar"]
+
+Build:
+docker build -t <image-name> .
+
+Run:
+docker run -d --name <container-name> -p 8080:8080 <image-name>
+
+
+PATTERN 2 – Java WAR application with Tomcat
+--------------------------------------------
+FROM tomcat:<version>
+COPY target/<application>.war /usr/local/tomcat/webapps/
+EXPOSE 8080
+CMD ["catalina.sh", "run"]
+
+Build:
+docker build -t <image-name> .
+
+Run:
+docker run -d --name <container-name> -p 8080:8080 <image-name>
+
+
+PATTERN 3 – Generic Dockerfile from Set 1/2/3
+---------------------------------------------
+FROM <base-image>
+WORKDIR /app
+COPY <application-file> /app/
+EXPOSE 8080
+CMD ["<startup-command>"]
+
+
+======================================================
+PART L – DOCKER HUB COMPLETE FLOW
+======================================================
+
+1. Build local image
+--------------------
+docker build -t <image-name> .
+
+2. Check image
+--------------
+docker images
+
+3. Login
+--------
+docker login
+
+4. Tag
+-------
+docker tag <image-name>:latest <username>/<image-name>:latest
+
+5. Push
+-------
+docker push <username>/<image-name>:latest
+
+6. Verify locally
+-----------------
+docker images
+
+7. Logout
+---------
+docker logout
+
+
+Example:
+docker build -t sportsapp-image .
+docker login
+docker tag sportsapp-image:latest <username>/sportsapp:latest
+docker push <username>/sportsapp:latest
+docker logout
+
+
+======================================================
+PART M – DOCKER TROUBLESHOOTING COMMANDS
+======================================================
+
+1. Image build error
+--------------------
+docker build -t <image-name> .
+docker images
+
+2. Container not running
+------------------------
+docker ps
+docker ps -a
+
+3. Container exits immediately
+------------------------------
+docker logs <container-name>
+
+4. Application/runtime issue
+----------------------------
+docker logs <container-name>
+
+5. Need to inspect inside container
+------------------------------------
+docker exec -it <container-name> /bin/sh
+
+6. Port mapping problem
+-----------------------
+docker ps
+docker run -p 8080:8080 <image-name>
+
+7. Check images
+---------------
+docker images
+
+8. Check container state
+------------------------
+docker ps -a
+
+9. Restart application
+----------------------
+docker restart <container-name>
+
+10. Rebuild after Dockerfile changes
+-------------------------------------
+docker build -t <image-name> .
+
+11. Check Docker version/environment
+------------------------------------
+docker --version
+docker version
+docker info
+
+
+======================================================
+PART N – IMPORTANT DOCKER CONCEPTS FOR EXAM
+======================================================
+
+1. IMAGE
+--------
+A Docker image is the packaged application/runtime template used to create
+containers.
+
+2. CONTAINER
+------------
+A container is a running/stopped instance created from an image.
+
+3. DOCKERFILE
+-------------
+A Dockerfile contains instructions used to build an image.
+
+4. docker build
+---------------
+Creates an image from the Dockerfile.
+
+Syntax:
+docker build -t <image-name> .
+
+5. docker run
+-------------
+Creates and starts a container from an image.
+
+Syntax:
+docker run -p 8080:8080 <image-name>
+
+6. PORT MAPPING
+---------------
+-p 8080:8080
+
+Format:
+-p HOST_PORT:CONTAINER_PORT
+
+7. EXPOSE
+---------
+EXPOSE 8080 documents the container port expected by the application.
+It does not by itself publish the port to the host.
+
+8. WORKDIR
+----------
+Sets the working directory inside the image/container.
+
+9. COPY
+-------
+Copies application files into the image.
+
+10. CMD
+-------
+Defines the default command executed when the container starts.
+
+11. docker ps
+------------
+Shows currently running containers.
+
+12. docker ps -a
+---------------
+Shows running and stopped containers.
+
+13. docker logs
+---------------
+Shows container output/logs and is especially useful when the application
+starts and then exits.
+
+14. docker exec
+---------------
+Runs a command inside a running container.
+
+15. docker stop
+--------------
+Stops a running container.
+
+16. docker start
+---------------
+Starts a stopped container.
+
+17. docker commit
+----------------
+Creates a new image from a container's current state.
+
+18. docker tag
+--------------
+Gives an image a repository/tag name, commonly for Docker Hub.
+
+19. docker push
+--------------
+Uploads an image to a container registry such as Docker Hub.
+
+20. docker login
+---------------
+Authenticates with Docker Hub/registry.
+
+21. docker logout
+----------------
+Logs out from the registry.
+
+
+======================================================
+PART O – EXAM TRIGGER WORD → COMMAND
+======================================================
+
+"build image"
+→ docker build -t <image> .
+
+"run application on 8080"
+→ docker run -p 8080:8080 <image>
+
+"run in background"
+→ docker run -d ...
+
+"name the container"
+→ docker run -d --name <container> ...
+
+"check running containers"
+→ docker ps
+
+"check all containers"
+→ docker ps -a
+
+"container stopped"
+→ docker ps -a
+→ docker logs <container>
+
+"view logs"
+→ docker logs <container>
+
+"enter container"
+→ docker exec -it <container> /bin/sh
+
+"stop container"
+→ docker stop <container>
+
+"start stopped container"
+→ docker start <container>
+
+"restart"
+→ docker restart <container>
+
+"create image from container"
+→ docker commit <container> <image>:committed
+
+"tag for Docker Hub"
+→ docker tag <image>:latest <username>/<image>:latest
+
+"upload/push to Docker Hub"
+→ docker push <username>/<image>:latest
+
+"login to Docker Hub"
+→ docker login
+
+"logout"
+→ docker logout
+
+"WAR to Tomcat"
+→ COPY target/<app>.war /usr/local/tomcat/webapps/
+
+"start Tomcat"
+→ CMD ["catalina.sh", "run"]
+
+"Java JAR container"
+→ CMD ["java","-jar","/app/<app>.jar"]
+
+"reduce image size"
+→ slim base image + .dockerignore + multi-stage build where appropriate
+
+
+======================================================
+PART P – FINAL ONE-MINUTE DOCKER REVISION
+======================================================
+
+DOCKERFILE:
+FROM openjdk:17-jdk-slim
+WORKDIR /app
+COPY target/app.jar /app/app.jar
+EXPOSE 8080
+CMD ["java","-jar","/app/app.jar"]
+
+BUILD:
+docker build -t app .
+
+RUN:
+docker run -d --name app-container -p 8080:8080 app
+
+CHECK:
+docker ps
+docker ps -a
+docker images
+
+LOG:
+docker logs app-container
+
+SHELL:
+docker exec -it app-container /bin/sh
+
+STOP/START:
+docker stop app-container
+docker start app-container
+
+COMMIT:
+docker commit app-container app:committed
+
+DOCKER HUB:
+docker login
+docker tag app:latest <username>/app:latest
+docker push <username>/app:latest
+docker logout
+
+WAR + TOMCAT:
+FROM tomcat:<version>
+COPY target/app.war /usr/local/tomcat/webapps/
+EXPOSE 8080
+CMD ["catalina.sh", "run"]
+
+
+======================================================
+SET COVERAGE CHECK
+======================================================
+
+SET 1  → HMS Dockerfile, build, run 8080, consistency, instructions,
+          troubleshooting, port mapping, Docker Hub tag/push.
+
+SET 2  → OTS Dockerfile, build, run 8080, build errors, port mapping,
+          stopped containers/logs, environment consistency, WAR/Tomcat.
+
+SET 3  → ORS Dockerfile, build, port mapping, image-size/build efficiency,
+          Docker Hub.
+
+SET 4  → OnlineShopping Dockerfile, Java/Maven/Tomcat, WAR→webapps,
+          EXPOSE/start Tomcat, build, run 8080, Docker Hub, verify.
+
+SET 5  → Blood Bank OpenJDK 17 Dockerfile, build, named container,
+          ps/ps-a, exec, stop/start, commit, login/tag/push/logout,
+          cleanup.
+
+SET 6  → Sports OpenJDK 17 Dockerfile, build, named container,
+          ps/ps-a, exec, stop/start, commit, Docker Hub, cleanup.
+
+SET 7  → Apartment OpenJDK 17 Dockerfile, build, named container,
+          ps/ps-a, exec, stop/start, commit, Docker Hub, cleanup.
+
+SET 8  → Vehicle Rental Java/Tomcat Dockerfile, WAR→webapps,
+          EXPOSE/start Tomcat, build/tag, run host 8080→container 8080,
+          verify, Docker Hub, logs/exec/stop/start.
+
+
+======================================================
+END – COMPLETE DOCKER COMMANDS FROM SETS 1–8
+======================================================
