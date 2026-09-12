@@ -1,0 +1,48 @@
+# 1. DOWNLOAD
+git clone https://github.com/sarasrija/Blood-Bank-Management-system.git
+cd Blood-Bank-Management-system
+
+# 2. CHECK PROJECT
+ls
+
+# 3. BUILD
+mvn clean package
+
+# 4. BUILD DOCKER IMAGE
+docker build -t Bloodbankapp-image .
+
+# 5. CHECK IMAGES
+docker images
+
+# 6. RUN CONTAINER
+docker run -d -p 8080:8080 --name Bloodbank-app-container Bloodbankapp-image
+
+# 7. CHECK RUNNING CONTAINERS
+docker ps
+
+# 8. CHECK ALL CONTAINERS
+docker ps -a
+
+# 9. ENTER CONTAINER
+docker exec -it Bloodbank-app-container /bin/bash
+
+# 10. EXIT CONTAINER
+exit
+
+# 11. STOP
+docker stop Bloodbank-app-container
+
+# 12. START AGAIN
+docker start Bloodbank-app-container
+
+# 13. CREATE IMAGE FROM CONTAINER
+docker commit 0e993d2009a1 24bd1a057r/Bloodbankapp:v1
+
+# 14. LOGIN
+docker login
+
+# 15. PUSH
+docker push 24bd1a057r/Bloodbankapp:v1
+
+# 16. LOGOUT
+docker logout
